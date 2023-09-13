@@ -49,6 +49,7 @@ if [ "$user" == "root" ]; then
   DECRYPTED_DIRECTORY="/$user/.config/.passwords/.decrypted"   # Definir directorio donde se almacenarán temporalmente contraseñas desencriptadas
   ENCRYPT_CODE="/$user/.config/.passwords/.encryptcode"   # Archivo que almacenará el hash de la clave de encriptación
   TEMPORAL_DIRECTORY="/$user/.config/.passwords/.temp"   # Directorio que almacenará temporalmente las contraseñas mientras se cambia la clave
+  VERSION_FILE="/$user/.config/.passwords/.version"
   echo -e "\n${redColour}[!]${endColour} ¡Alerta! Está ejecutando este script como ${redColour}root${endColour}"
 else
   PASSWORD_DIRECTORY="/home/$user/.config/.passwords"   # Definir directorio principal
@@ -56,18 +57,19 @@ else
   DECRYPTED_DIRECTORY="/home/$user/.config/.passwords/.decrypted"   # Definir directorio donde se almacenarán temporalmente contraseñas desencriptadas
   ENCRYPT_CODE="/home/$user/.config/.passwords/.encryptcode"   # Archivo que almacenará el hash de la clave de encriptación
   TEMPORAL_DIRECTORY="/home/$user/.config/.passwords/.temp"   # Directorio que almacenará temporalmente las contraseñas mientras se cambia la clave
+  VERSION_FILE="/home/$user/.config/.passwords/.version"
 fi
 
 if [ ! -d $PASSWORD_DIRECTORY ]; then   # Creación del directorio principal y asignación de permisos (si no existe)
-  mkdir $PASSWORD_DIRECTORY && chmod 700 $PASSWORD_DIRECTORY
+  mkdir -p $PASSWORD_DIRECTORY && chmod 700 $PASSWORD_DIRECTORY
 fi
 
 if [ ! -d $ENCRYPTED_DIRECTORY ]; then   # Creación del directorio .encrypted y asignación de permisos (si no existe)
-  mkdir $ENCRYPTED_DIRECTORY && chmod 700 $ENCRYPTED_DIRECTORY
+  mkdir -p $ENCRYPTED_DIRECTORY && chmod 700 $ENCRYPTED_DIRECTORY
 fi
 
 if [ ! -d $DECRYPTED_DIRECTORY ]; then   # Creación del directorio .decrypted y asignación de permisos (si no existe)
-  mkdir $DECRYPTED_DIRECTORY && chmod 700 $DECRYPTED_DIRECTORY
+  mkdir -p $DECRYPTED_DIRECTORY && chmod 700 $DECRYPTED_DIRECTORY
 fi
 
 if [ ! -f "$PASSWORD_DIRECTORY/.register" ]; then   # Creación del registro de contraseñas y asignación de permisos (si no existe)
@@ -76,6 +78,12 @@ fi
 
 if [ ! -f "$ENCRYPT_CODE" ]; then   # Creación del archivo que contiene la clave y asignación de permisos (si no existe)
   touch "$ENCRYPT_CODE" && chmod 700 "$ENCRYPT_CODE"
+fi
+
+if [ ! -f "$VERSION_FILE" ]; then
+  touch "$VERSION_FILE"
+  echo "1.0.0" > "$VERSION_FILE"
+  chmod 400 "$VERSION_FILE"
 fi
 
 if [ ! -s "$ENCRYPT_CODE" ]; then   # Si el archivo que contiene la clave está vacío, se dirá al usuario de establecer la clave
@@ -108,6 +116,7 @@ echo -e "\t${blueColour}·delete${endColour} ${greenColour}-->${endColour} ${pur
 echo -e "\t${blueColour}·chkey${endColour} ${greenColour}-->${endColour} ${purpleColour}(${endColour}${yellowColour}primer argumento${endColour}${purpleColour})${endColour} ${greenColour}-->${endColour} Cambiar la contraseña de encriptación"
 echo -e "\t${blueColour}·reset${endColour} ${greenColour}-->${endColour} ${purpleColour}(${endColour}${yellowColour}primer argumento${endColour}${purpleColour})${endColour} ${greenColour}-->${endColour} Resetear los archivos (contraseñas y clave)"
 echo -e "\t   ${purpleColour}-f${endColour} ${greenColour}-->${endColour} Resetear sin clave de encriptación en caso de olvido ${yellowColour}(debe ir antes de \"reset\")${endColour}"
+echo -e "\t${blueColour}·version${endColour} ${greenColour}-->${endColour} ${purpleColour}(${endColour}${yellowColour}primer argumento${endColour}${purpleColour})${endColour} ${greenColour}-->${endColour} Verificar la versión de la herramienta"
 echo -e "\t${blueColour}·(nombre)${endColour} ${greenColour}-->${endColour} ${purpleColour}(${endColour}${yellowColour}segundo argumento${endColour} ${purpleColour}|${endColour} ${yellowColour}no siempre necesario${endColour}${purpleColour})${endColour}"
 echo -e "\n${yellowColour}[+]${endColour} ¡SCRIPT SENSIBLE A MAYÚSCULAS EN NOMBRES!\n"
 echo -e "${yellowColour}[+]${endColour} Recuerda su clave de encriptación. La necesitará para hacer cualquier cambio.\n"
@@ -388,11 +397,16 @@ function force_reset {
     fi
 }
 
+function version {
+  version=$(cat $VERSION_FILE)
+  echo -e "\n${yellowColour}[+]${redColour} ${grayColour}Version -->${endColour} ${greenColour}$version${endColour}\n"
+}
+
 force_reset=false
 
 declare -i parameter_counter=0
 
-while getopts "f:s:g:ld:cr" arg; do
+while getopts "f:s:g:ld:crv" arg; do
   case $arg in
     f) if [ "$OPTARG" == "reset" ] || [ "$parameter_counter" -eq 5 ]; then
           force_reset=true
@@ -406,23 +420,26 @@ while getopts "f:s:g:ld:cr" arg; do
     d) let parameter_counter+=4 ;;
     r) let parameter_counter+=5 ;;
     c) let parameter_counter+=6 ;;
+    v) let parameter_counter+=7 ;;
   esac
 done
 
 if [ "$force_reset" == "true" ]; then
-    force_reset
+  force_reset
 elif [ "$1" == "save" ] || [ "$parameter_counter" -eq 1 ]; then
-    save_password "$2" "$3"
+  save_password "$2" "$3"
 elif [ "$1" == "get" ] || [ "$parameter_counter" -eq 2 ]; then
-    get_password "$2"
+  get_password "$2"
 elif [ "$1" == "list" ] || [ "$parameter_counter" -eq 3 ]; then
-    list_passwords
+  list_passwords
 elif [ "$1" == "delete" ] || [ "$parameter_counter" -eq 4 ] ; then
-    delete_password "$2"
+  delete_password "$2"
 elif [ "$1" == "reset" ] || [ "$parameter_counter" -eq 5 ]; then
-    reset
+  reset
 elif [ "$1" == "chkey" ] || [ "$parameter_counter" -eq 6 ]; then
-    chkey
+  chkey
+elif [ "$1" == "version" ] || [ "$parameter_counter" -eq 7 ]; then
+  version
 else
   helpPanel
 fi
