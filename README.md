@@ -43,6 +43,9 @@ Para controlar el script se podrán utilizar tanto argumentos cómo parámetros:
 
 No recomiendo manipular los directorios y archivos en los que se almacena información, así como modificar los permisos de estos, ya que pueden suponer un riesgo de seguridad o hacer que Ultimate Password Manager no funcione debidamente.
 
+Tampoco recomiendo manipular la versión de Ultimate Password Manager que figura en los archivos de configuración, ya que esto creará errores a la hora de comprobar la versión y actualizar esta herramienta. Ya que está preparada para modificar la
+versión automáticamente y no manualmente.
+
 Siempre se puede mirar el código para entender como esta herramienta funciona o para modificarlo en base a su gusto y las preferencias que tenga. El código cuenta con comentarios que le ayudarán a entender mejor este.
 
 Es recomendable situar este script en una ruta como /bin o /usr/bin. O cualquier otra ruta incluida en el PATH, para así ejecutarla de forma relativa
