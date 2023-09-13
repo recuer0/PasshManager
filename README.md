@@ -12,6 +12,7 @@ El script cuenta con múltiples parámetros para desempeñar funciones simples c
  	4. Eliminar un servicio específico
 	5. Cambiar la clave de encriptación
  	6. Resetear
+  	7. Ver la versión de la herramienta
 
 Algo a tener en cuenta es que cada usuario dentro del sistema tendrá sus propias contraseñas con su propia clave de encriptación, incluyendo al superusuario. Esto quiere decir que un usuario del equipo no puede ver las contraseñas de otro usuario, ya sea
 mediante el uso de la herramienta o físicamente en los archivos.
@@ -30,13 +31,15 @@ Se debe tener en cuenta que al pulsar "Ctrl + C" o abortar el programa, se reali
 
 Para controlar el script se podrán utilizar tanto argumentos cómo parámetros:
 
-	-s (save)   --> Guardar una contraseña
- 	-g (get)    --> Obtener una contrasñea
-	-l (list)   --> Listar servicios guardados
-	-d (delete) --> Eliminar un servicio específico
- 	-c (chkey)  --> Cambiar clave de encriptación
-	-r (reset)  --> Resetear todo el almacenamiento
- ![imagen](https://github.com/recuer0/Ultimate-PasswdM/assets/115647090/e988c048-3274-472b-a630-75153485d394)
+	-s (save)    --> Guardar una contraseña
+ 	-g (get)     --> Obtener una contrasñea
+	-l (list)    --> Listar servicios guardados
+	-d (delete)  --> Eliminar un servicio específico
+ 	-c (chkey)   --> Cambiar clave de encriptación
+	-r (reset)   --> Resetear todo el almacenamiento
+ 	-v (version) --> Ver la versión de la herramienta
+![imagen](https://github.com/recuer0/Ultimate-PasswdM/assets/115647090/5abcd83b-e65c-4f23-8b22-c7d5232a9333)
+
 
 No recomiendo manipular los directorios y archivos en los que se almacena información, así como modificar los permisos de estos, ya que pueden suponer un riesgo de seguridad o hacer que Ultimate Password Manager no funcione debidamente.
 
