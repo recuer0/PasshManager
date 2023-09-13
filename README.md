@@ -19,8 +19,8 @@ mediante el uso de la herramienta o físicamente en los archivos.
 
 El directorio raíz de almacenamiento que utiliza Ultimate Password Manager es /home/user/.config/.passwords. Aquí dentro se encuentra:
 
-	1. Directorio decrypted --> directorio donde se almacenan temporalmente archivos de contraseñas cuando 
- 	   son decriptadas para mostrarlas
+	1. Directorio decrypted --> directorio donde se almacenan temporalmente archivos de contraseñas 
+ 	   cuando son decriptadas para mostrarlas
  	2. Directorio encrypted --> directorio donde se almacenan los archivos de contraseñas encriptadas
 	3. Archivo encryptCode  --> archivo donde se almacena el hash de la clave de encriptación
  	4. Archivo register     --> archivo donde se almacenan los servicios guardados para poder listarlos
