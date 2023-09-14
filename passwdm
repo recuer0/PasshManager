@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# version --> 0.1.0
+# version --> 1.0.0
 
 #Colours
 greenColour="\e[0;32m"
