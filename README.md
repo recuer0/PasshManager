@@ -12,7 +12,7 @@ El script cuenta con múltiples parámetros para desempeñar funciones simples c
  	4. Eliminar un servicio específico
 	5. Cambiar la clave de encriptación
  	6. Resetear
-  	7. Ver la versión de la herramienta
+  	7. Ver la versión de la herramienta y actualizarla
 
 Algo a tener en cuenta es que cada usuario dentro del sistema tendrá sus propias contraseñas con su propia clave de encriptación, incluyendo al superusuario. Esto quiere decir que un usuario del equipo no puede ver las contraseñas de otro usuario, ya sea
 mediante el uso de la herramienta o físicamente en los archivos.
@@ -37,7 +37,7 @@ Para controlar el script se podrán utilizar tanto argumentos cómo parámetros:
 	-d (delete)  --> Eliminar un servicio específico
  	-c (chkey)   --> Cambiar clave de encriptación
 	-r (reset)   --> Resetear todo el almacenamiento
- 	-v (version) --> Ver la versión de la herramienta
+ 	-v (version) --> Ver la versión de la herramienta y actualizarla
 ![imagen](https://github.com/recuer0/Ultimate-PasswdM/assets/115647090/5abcd83b-e65c-4f23-8b22-c7d5232a9333)
 
 
