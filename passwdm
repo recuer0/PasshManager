@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# version --> 1.0.0
+# version --> 1.1.0
+
+# test line
 
 #Colours
 greenColour="\e[0;32m"
@@ -86,7 +88,7 @@ fi
 
 if [ ! -f "$VERSION_FILE" ]; then
   touch "$VERSION_FILE"
-  echo "1.0.0" > "$VERSION_FILE"
+  echo "1.1.0" > "$VERSION_FILE"
   chmod 400 "$VERSION_FILE"
 fi
 
@@ -263,10 +265,10 @@ function delete_password {
 }
 
 function chkey {
-  echo -e -n "\n${yellowColour}[+]${endColour} ¿Desea ${purpleColour}cambiar${endColour} la clave de encriptación? ${yellowColour}(y/n)${endColour}: "
+  echo -e -n "\n${yellowColour}[+]${endColour} ¿Desea ${purpleColour}cambiar${endColour} la clave de encriptación? ${yellowColour}(Y/n)${endColour}: ${yellowColour}"
   read answer
 
-    if [ "$answer" == "Y" ] || [ "$answer" == "y" ]; then
+    if [ "$answer" == "Y" ] || [ "$answer" == "y" ] || [ "$answer" == '' ]; then
       echo -e -n "\n${yellowColour}[+]${endColour} Introduzca la clave de encriptación: "
       read -s encryptKey
 
@@ -334,11 +336,11 @@ function chkey {
           exit 1
         fi
 
-      elif [ "$answer" == "N" ] || [ "$answer" == "n" ] ; then
+    elif [ "$answer" == "N" ] || [ "$answer" == "n" ] ; then
       echo -e "\n${redColour}[!] Abortando...${endColour}\n"
       exit 1
     else
-      echo -e "\n${redColour}[!] Respuesta no esperada. Saliendo...${endColour}"
+      echo -e "\n${redColour}[!] Respuesta no esperada. Saliendo...${endColour}\n"
       exit 1
     fi
 }
@@ -411,18 +413,55 @@ function check_version {
   version_file=$(echo $(cat $VERSION_FILE))
   if [ "$version_script" == "$version_file" ]; then
     tput civis
-    echo -e "\n[+] Verificando si existen actualizaciones disponibles..."
+    echo -e "\n${yellowColour}[+]${endColour} Verificando si existen actualizaciones disponibles..."
     sleep .5
-    echo -e "[+] Esto puede tardar unos segundos...\n"
+    echo -e "${yellowColour}[+]${endColour} Esto puede tardar unos segundos...\n"
     svn export https://github.com/recuer0/Ultimate-PasswdM/trunk/passwdm "$REPOSITORY_DIRECTORY/passwdm" &>/dev/null
-    new_version=$(cat "$REPOSITORY_DIRECTORY/passwdm")
-    new_version_np=$(echo $new_version | tr -d '.')
-    original_version_np=$(echo $version_file | tr -d '.')
-    echo $new_version_np
-    echo $original_version_np
+    new_version=$(cat "$REPOSITORY_DIRECTORY/passwdm" | grep -m 1 "version" )
+    new_version_yp=$(echo "$new_version" | awk 'NF{print $NF}')
+    new_version_np=$(echo "$new_version" | awk 'NF{print $NF}' | tr -d '.')
+    original_version_np=$(echo "$version_file" | tr -d '.')
+    
+    if [ "$new_version_np" -gt "$original_version_np" ]; then
+      original_wov=$(echo $(cat "$ruta" | awk '/version/ && ++count == 1 {next} 1'| md5sum))
+      new_wov=$(echo $(cat "$REPOSITORY_DIRECTORY/passwdm" | awk '/version/ && ++count == 1 {next} 1' | md5sum))
+      if [ "$original_wov" != "$new_wov" ]; then
+        echo -e "${yellowColour}[+]${endColour} ¡Actualizaciones Encontradas!\n"
+        echo -e "${yellowColour}[+]${endColour} Versión actual ${yellowColour}-->${endColour} ${redColour}$version_file${endColour}"
+        echo -e "${yellowColour}[+]${endColour} Nueva versión  ${yellowColour}-->${endColour} ${greenColour}$new_version_yp${endColour}"
+        tput cnorm
+        echo -en "\n${yellowColour}[+]${endColour} ¿Desea actualizar ahora Ultimate Password Manager? ${yellowColour}(Y/n)${endColour}: ${yellowColour}"
+        read answer
+        
+        if [ "$answer" == "Y" ] || [ "$answer" == "y" ] || [ "$answer" == '' ]; then
+          echo -e "\n[+]${endColour} Actualizando herramienta...\n"
+          chmod +x "$REPOSITORY_DIRECTORY/passwdm"
+          mv "$REPOSITORY_DIRECTORY/passwdm" "$ruta"
+          chmod +w "$VERSION_FILE"
+          echo "$new_version_yp" > "$VERSION_FILE"
+          chmod -w "$VERSION_FILE"
+          echo -e "${yellowColour}[+]${endColour} Actualizaciones concluidas con éxito\n"
+        elif [ "$answer" == "N" ] || [ "$answer" == "n" ]; then
+          echo -e "\n${yellowColour}[+]${endColour} Recuerde que puede actualizar Ultimate Password Manager usando el parámetro ${blueColour}-u${endColour}\n"
+          rm "$REPOSITORY_DIRECTORY/passwdm"
+        else
+          echo -e "\n[!] Respuesta no esperada. Abortando...\n"
+          rm "$REPOSITORY_DIRECTORY/passwdm"
+          exit 1
+        fi
+
+      else
+        echo -e "\n${redColour}[!]${endColour} Se ha detectado una versión ${redColour}errónea${endColour} o ${redColour}manipulada${endColour}"
+        exit 1
+      fi
+    else
+      echo -e "${yellowColour}[+]${endColour} Versión actual ${yellowColour}-->${endColour} ${greenColour}$version_file${endColour}\n"
+      echo -e "${redColour}[!]${endColour} No hay actualizaciones disponibles\n"
+    fi
+
     tput cnorm
   else
-    echo -e "\n${redColour}[!]${endColour} Ha habido un problema al comprobar la versión, recuerde ${redColour}no manipular${endColour} los archivos de configuración para\n    evitar problemas. Trate de actualizar la versión manualmente descargándolo del repositorio de ${purpleColour}Github${endColour}:\n\n    ${purpleColour}https://github.com/recuer0/Ultimate-PasswdM${endColour}\n"  
+    echo -e "\n${redColour}[!]${endColour} Ha habido un problema al comprobar la versión, recuerde ${redColour}no manipular${endColour} los archivos de configuración para\n    evitar problemas. Trate de actualizar la versión manualmente descargándolo del repositorio de ${purpleColour}Github${endColour}.\n    Estamos intentando solucionar el problema, vuélvalo a intentar...\n\n    ${purpleColour}https://github.com/recuer0/Ultimate-PasswdM${endColour}\n"  
   fi
 }
 
