@@ -29,6 +29,14 @@ function ctrl_c(){   # Definir lo que pasará al salir del programa
       done
       rm -rf "/$user/.config/.passwords/.temp"   # Eliminación de directorio .temp
     fi
+    if [ -f "/$user/.config/.passwords/.repo/passwdm" ]; then
+      rm "/$user/.config/.passwords/.repo/passwdm"
+      chmod +w "/$user/.config/.passwords/.version"
+      echo "1.1.0" > "/$user/.config/.passwords/.version"
+      chmod -w "/$user/.config/.passwords/.version"
+      ruta=$(readlink -f "$0")
+      sed '/# version --> [0-9]\+\.[0-9]\+\.[0-9]\+/c\# version --> 1.1.0' $ruta
+    fi
   else
     rm -rf "/home/$user/.config/.passwords/.decrypted"   # Eliminación de directorio .decrypted
     mkdir "/home/$user/.config/.passwords/.decrypted" && chmod 700 "/home/$user/.config/.passwords/.decrypted"   # Creación de la carpeta .decrypted
@@ -39,6 +47,14 @@ function ctrl_c(){   # Definir lo que pasará al salir del programa
         fi
       done
       rm -rf "/home/$user/.config/.passwords/.temp"   # Eliminación de directorio .temp
+    fi
+    if [ -f "/home/$user/.config/.passwords/.repo/passwdm" ]; then
+      rm "/home/$user/.config/.passwords/.repo/passwdm"
+      chmod +w "/home/$user/.config/.passwords/.version"
+      echo "1.1.0" > "/home/$user/.config/.passwords/.version"
+      chmod -w "/home/$user/.config/.passwords/.version"
+      ruta=$(readlink -f "$0")
+      sed '/# version --> [0-9]\+\.[0-9]\+\.[0-9]\+/c\# version --> 1.1.0' $ruta
     fi
   fi
   gpg-connect-agent reloadagent /bye
@@ -442,7 +458,6 @@ function check_version {
           chmod -w "$VERSION_FILE"
           echo -e "${yellowColour}[+]${endColour} Actualizaciones concluidas con éxito\n"
         elif [ "$answer" == "N" ] || [ "$answer" == "n" ]; then
-          echo -e "\n${yellowColour}[+]${endColour} Recuerde que puede actualizar Ultimate Password Manager usando el parámetro ${blueColour}-u${endColour}\n"
           rm "$REPOSITORY_DIRECTORY/passwdm"
         else
           echo -e "\n[!] Respuesta no esperada. Abortando...\n"
@@ -452,13 +467,14 @@ function check_version {
 
       else
         echo -e "\n${redColour}[!]${endColour} Se ha detectado una versión ${redColour}errónea${endColour} o ${redColour}manipulada${endColour}"
+        rm "$REPOSITORY_DIRECTORY/passwdm"
         exit 1
       fi
     else
       echo -e "${yellowColour}[+]${endColour} Versión actual ${yellowColour}-->${endColour} ${greenColour}$version_file${endColour}\n"
       echo -e "${redColour}[!]${endColour} No hay actualizaciones disponibles\n"
+      rm "$REPOSITORY_DIRECTORY/passwdm"
     fi
-
     tput cnorm
   else
     echo -e "\n${redColour}[!]${endColour} Ha habido un problema al comprobar la versión, recuerde ${redColour}no manipular${endColour} los archivos de configuración para\n    evitar problemas. Trate de actualizar la versión manualmente descargándolo del repositorio de ${purpleColour}Github${endColour}.\n    Estamos intentando solucionar el problema, vuélvalo a intentar...\n\n    ${purpleColour}https://github.com/recuer0/Ultimate-PasswdM${endColour}\n"  
