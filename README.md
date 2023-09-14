@@ -50,6 +50,8 @@ Siempre se puede mirar el código para entender como esta herramienta funciona o
 
 Es recomendable situar este script en una ruta como /bin o /usr/bin. O cualquier otra ruta incluida en el PATH, para así ejecutarla de forma relativa
 
+IMPORTANTE AÑADIRLE PERMISO DE EJECUCIÓN
+
 Algo a tener en cuenta es que esta es mi primera herramienta y puede incluir errores, sería de gran ayuda notificarme de errores para poder subir nuevas versiones con mejoras.
 
 Muchas Gracias!
