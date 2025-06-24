@@ -432,7 +432,7 @@ function check_version {
     echo -e "\n${yellowColour}[+]${endColour} Verificando si existen actualizaciones disponibles..."
     sleep .5
     echo -e "${yellowColour}[+]${endColour} Esto puede tardar unos segundos...\n"
-    svn export https://github.com/recuer0/Ultimate-PasswdM/trunk/passwdm "$REPOSITORY_DIRECTORY/passwdm" &>/dev/null
+    svn export https://github.com/recuer0/PasshManager/trunk/passwdm "$REPOSITORY_DIRECTORY/passwdm" &>/dev/null
     new_version=$(cat "$REPOSITORY_DIRECTORY/passwdm" | grep -m 1 "version" )
     new_version_yp=$(echo "$new_version" | awk 'NF{print $NF}')
     new_version_np=$(echo "$new_version" | awk 'NF{print $NF}' | tr -d '.')
